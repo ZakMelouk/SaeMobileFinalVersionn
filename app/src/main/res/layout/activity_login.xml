@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".LoginActivity">
+
+    <TextView
+        android:id="@+id/Hello"
+        android:textColor="#FFD700"
+        android:textColorHint="#FFD700"
+        android:layout_width="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="200dp"
+        android:layout_height="wrap_content"
+        android:hint="HELLO" />
+
+    <EditText
+        android:id="@+id/TextEmail"
+        android:textColor="#FFD700"
+        android:textColorHint="#FFD700"
+        android:layout_width="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="250dp"
+        android:layout_height="wrap_content"
+        android:hint="Email" />
+
+    <EditText
+        android:id="@+id/TextPassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/TextEmail"
+        android:layout_marginTop="16dp"
+        android:inputType="textPassword"
+        android:textColor="#FFD700"
+        android:textColorHint="#FFD700"
+        android:hint="Mot de passe" />
+
+    <Button
+        android:id="@+id/buttonLogin"
+        android:layout_width="165dp"
+        android:layout_height="70dp"
+        android:layout_below="@id/TextPassword"
+        android:backgroundTint = "#FFF"
+        android:layout_marginTop="16dp"
+        android:text="Se connecter"
+        android:textColor="#18242e"
+        android:textColorHint="#18242e"
+        android:layout_centerHorizontal="true"/>
+</RelativeLayout>
