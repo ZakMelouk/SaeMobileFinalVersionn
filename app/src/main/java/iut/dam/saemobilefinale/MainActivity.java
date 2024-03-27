@@ -1,6 +1,7 @@
 package iut.dam.saemobilefinale;
 
 import androidx.activity.result.ActivityResultLauncher;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -13,6 +14,21 @@ import android.widget.Toast;
 
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.Calendar;
+import java.util.Date;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -87,6 +103,31 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
     public void insererSignalement(String CIP){
+        Calendar currentCalendar = Calendar.getInstance();
+        Date currentDate = currentCalendar.getTime();
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        String formattedCurrentDate = dateFormat.format(currentDate);
+        String urlString = "http://192.168.1.13/Pharmacie/insertSignalement.php?cip_13=" + CIP + "&current_date=" + formattedCurrentDate ;
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(urlString)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                String responseData = response.body().string();
+                Toast.makeText(getApplicationContext(), responseData, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                runOnUiThread(() -> {
+                    Toast.makeText(getApplicationContext(), "ERREUR", Toast.LENGTH_SHORT).show();
+                });
+            }
+        });
 
     }
 }
