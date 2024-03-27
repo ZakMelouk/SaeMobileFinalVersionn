@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -106,9 +107,12 @@ public class MainActivity extends AppCompatActivity {
         Calendar currentCalendar = Calendar.getInstance();
         Date currentDate = currentCalendar.getTime();
 
+        // Ajouter une heure à la date actuelle
+        currentCalendar.add(Calendar.HOUR_OF_DAY, 1);
+        Date newDate = currentCalendar.getTime();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-        String formattedCurrentDate = dateFormat.format(currentDate);
-        String urlString = "http://192.168.1.13/Pharmacie/insertSignalement.php?cip_13=" + CIP + "&current_date=" + formattedCurrentDate ;
+        String formattedNewDate = dateFormat.format(newDate);
+        String urlString = "http://192.168.1.13/Pharmacie/insertSignalement.php?cip_13=" + CIP + "&current_date=" + formattedNewDate ;
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url(urlString)
@@ -118,16 +122,18 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 String responseData = response.body().string();
-                Toast.makeText(getApplicationContext(), responseData, Toast.LENGTH_SHORT).show();
+                runOnUiThread(() -> {
+                    Toast.makeText(getApplicationContext(), responseData, Toast.LENGTH_SHORT).show();
+                });
             }
 
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 runOnUiThread(() -> {
+                    Log.d("Erreur de connexion", "Erreur lors de la connexion au serveur : " + e.getMessage());
                     Toast.makeText(getApplicationContext(), "ERREUR", Toast.LENGTH_SHORT).show();
                 });
             }
         });
-
     }
 }
