@@ -8,6 +8,8 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
@@ -20,11 +22,23 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         btn_scan = findViewById(R.id.btn_Scan);
+        Button btn_signaler = findViewById(R.id.btn_Signaler);
+        EditText editTextCIP = findViewById(R.id.editTextCIP);
 
         btn_scan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 scan_code();
+            }
+        });
+
+        btn_signaler.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(verifierCIP(editTextCIP))
+                    insererSignalement(editTextCIP.getText().toString());
+                else
+                    Toast.makeText(getApplicationContext(), "Le code doit avoir une longueur de 13 et ne contenir que des chiffres.", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -54,4 +68,25 @@ public class MainActivity extends AppCompatActivity {
             }).show();
         }
     });
+
+    public boolean verifierCIP(EditText editText) {
+        String cip = editText.getText().toString().trim();
+
+        // Vérifier la longueur
+        if (cip.length() != 13) {
+            return false;
+        }
+
+        // Vérifier que tous les caractères sont des chiffres
+        for (int i = 0; i < cip.length(); i++) {
+            if (!Character.isDigit(cip.charAt(i))) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+    public void insererSignalement(String CIP){
+
+    }
 }

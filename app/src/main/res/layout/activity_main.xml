@@ -7,19 +7,44 @@
     tools:context=".MainActivity">
 
     <TextView
+        android:id="@+id/textSignalez"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
+        android:text="Signalez vos médicaments"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="100dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <EditText
+        android:id="@+id/editTextCIP"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textSignalez"
+        android:layout_centerHorizontal="true"
+        android:textSize="10dp"
+        android:layout_marginTop="100dp"
+        android:text="Tappez le code CIP à 13 chiffres"/>
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Scan"
-        android:layout_centerInParent="true"
+        android:text="Signaler"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/editTextCIP"
+        android:id="@+id/btn_Signaler"
+        />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Scanner le QR Code"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:layout_below="@+id/btn_Signaler"
         android:id="@+id/btn_Scan"
         />
 
