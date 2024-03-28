@@ -5,10 +5,10 @@ import com.google.gson.Gson;
 import org.json.JSONException;
 
 public class Admin {
-    String firstname;
-    String lastname;
-    String email;
-    String designation;
+    private String firstname;
+    private String lastname;
+    private String email;
+    private String designation;
 
     public static Admin getFromJson(String json) throws Exception {
         Gson gson = new Gson();
