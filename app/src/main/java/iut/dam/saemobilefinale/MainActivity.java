@@ -6,6 +6,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -38,7 +39,7 @@ import okhttp3.Response;
 public class MainActivity extends AppCompatActivity {
 
     Button btn_scan;
-
+    Button btn_signaler;
     Map<Signalement,Medicament> MesSignalements;
 
     @Override
@@ -46,9 +47,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         btn_scan = findViewById(R.id.btn_Scan);
-        Button btn_signaler = findViewById(R.id.btn_Signaler);
+        btn_signaler = findViewById(R.id.btn_Signaler);
         EditText editTextCIP = findViewById(R.id.editTextCIP);
         MesSignalements = new HashMap<>();
+        btn_signaler.setBackgroundColor(Color.parseColor("#FFFFFF"));
+        btn_scan.setBackgroundColor(Color.parseColor("#FFFFFF"));
 
         btn_scan.setOnClickListener(new View.OnClickListener() {
             @Override
