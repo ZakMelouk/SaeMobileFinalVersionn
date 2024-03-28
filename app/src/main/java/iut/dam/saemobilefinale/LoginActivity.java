@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -40,7 +41,19 @@ public class LoginActivity extends AppCompatActivity {
         int buttonColor = Color.parseColor("#FFD700");
         buttonLogin.setBackgroundColor(buttonColor);
         buttonLogin.setOnClickListener(v -> Login(emailET.getText().toString(), passwordET.getText().toString()));
-
+        buttonLogin.setBackgroundColor(Color.parseColor("#FFFFFF"));
+        buttonLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                buttonLogin.setBackgroundColor(Color.parseColor("#003d66"));
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        buttonLogin.setBackgroundColor(Color.parseColor("#FFFFFF")); // Couleur d'origine
+                    }
+                }, 150); // Délai en millisecondes
+            }
+        });
     }
 
     private void Login(String email, String password) {
