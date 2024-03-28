@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -56,6 +57,14 @@ public class MainActivity extends AppCompatActivity {
         btn_scan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                btn_scan.setBackgroundColor(Color.parseColor("#003d66"));
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        btn_scan.setBackgroundColor(Color.parseColor("#FFFFFF")); // Couleur d'origine
+                    }
+                }, 150); // Délai en millisecondes
+
                 scan_code();
             }
         });
@@ -63,16 +72,26 @@ public class MainActivity extends AppCompatActivity {
         btn_signaler.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                btn_signaler.setBackgroundColor(Color.parseColor("#003d66"));
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        btn_signaler.setBackgroundColor(Color.parseColor("#FFFFFF")); // Couleur d'origine
+                    }
+                }, 150); // Délai en millisecondes
                 String CIP = editTextCIP.getText().toString();
                 if(verifierCIP(CIP)){
                     if(!(estSignale(CIP)))
                         insererSignalement(CIP);
                     else
                         Toast.makeText(getApplicationContext(), "Vous venez de signaler ce medicament.", Toast.LENGTH_SHORT).show();
+                    // Restaurer la couleur d'origine du bouton après un certain délai (par exemple, 1 seconde)
+
                 }
                 else
                     Toast.makeText(getApplicationContext(), "Le code doit avoir une longueur de 13 et ne contenir que des chiffres.", Toast.LENGTH_SHORT).show();
             }
+
         });
 
     }

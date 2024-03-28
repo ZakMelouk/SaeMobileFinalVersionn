@@ -7,6 +7,18 @@
     android:background="#007acc"
     tools:context=".MainActivity">
 
+
+    <ImageView
+        android:id="@+id/imageLogo"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/logo"
+        android:layout_marginBottom="10dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="0dp"/>
+
+
+
     <TextView
         android:id="@+id/textSignalez"
         android:layout_width="wrap_content"
@@ -14,8 +26,8 @@
         android:text="Signalez vos médicaments"
         android:layout_centerHorizontal="true"
         android:textColor="#ffffff"
-        android:layout_marginTop="100dp"
-        android:textSize="30dp"
+        android:layout_marginTop="110dp"
+        android:textSize="28dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -28,8 +40,9 @@
         android:layout_below="@+id/textSignalez"
         android:layout_centerHorizontal="true"
         android:textSize="20dp"
-        android:background="#ffffff"
         android:layout_marginTop="100dp"
+        android:padding="20dp"
+        android:background="@drawable/edittext_rounded_corners"
         android:hint="Tappez le code CIP à 13 chiffres"/>
 
     <Button
@@ -38,19 +51,26 @@
         android:text="Signaler"
         android:textColor="#007acc"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="30dp"
         android:layout_below="@+id/editTextCIP"
         android:id="@+id/btn_Signaler"
-        android:width="200dp"
+        android:width="300dp"
         />
-
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/qricon"
+        android:layout_below="@+id/btn_Signaler"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="70dp"/>
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Scanner le QR Code"
         android:layout_centerHorizontal="true"
         android:textColor="#007acc"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="200dp"
         android:layout_below="@+id/btn_Signaler"
         android:id="@+id/btn_Scan"
         android:width="200dp"
