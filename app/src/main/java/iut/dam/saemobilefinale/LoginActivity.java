@@ -25,6 +25,11 @@ import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import java.sql.Connection;
+import java.sql.CallableStatement;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Types;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -42,7 +47,6 @@ public class LoginActivity extends AppCompatActivity {
         EditText passwordET = findViewById(R.id.TextPassword);
         int buttonColor = Color.parseColor("#FFD700");
         buttonLogin.setBackgroundColor(buttonColor);
-        buttonLogin.setOnClickListener(v -> Login(emailET.getText().toString(), passwordET.getText().toString()));
         buttonLogin.setBackgroundColor(Color.parseColor("#FFFFFF"));
         ImageView img_Back = findViewById(R.id.fleche);
         img_Back.setOnClickListener(new View.OnClickListener() {
@@ -55,7 +59,9 @@ public class LoginActivity extends AppCompatActivity {
         buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                login(emailET.getText().toString(), passwordET.getText().toString());
                 buttonLogin.setBackgroundColor(Color.parseColor("#003d66"));
+
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -66,7 +72,7 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private void Login(String email, String password) {
+    private void login(String email, String password) {
         if (!(android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches())) {
             Toast.makeText(getApplicationContext(), R.string.email_not_valid, Toast.LENGTH_SHORT).show();
             return;
@@ -90,23 +96,16 @@ public class LoginActivity extends AppCompatActivity {
                 String responseBody = response.body().string();
                 try {
                     admin = Admin.getFromJson(responseBody);
-
                     runOnUiThread(() -> {
                         // Utiliser les données extraites comme nécessaire
                         Toast.makeText(getApplicationContext(), R.string.successful_login, Toast.LENGTH_SHORT).show();
-                            /*Intent newIntent = new Intent(LoginActivity.this, EditProfileActivity.class);
-                            newIntent.putExtra("FIRSTNAME", firstname);
-                            newIntent.putExtra("LASTNAME", lastname);
-                            newIntent.putExtra("EMAIL", email);
-                            newIntent.putExtra("DESIGNATION", designation);
+                            Intent newIntent = new Intent(LoginActivity.this, StatistiqueActivity.class);
                             startActivity(newIntent);
                              finish();
-                                */
                     });
 
                 } catch (Exception e) {
                     runOnUiThread(() -> {
-                        // Gérer les erreurs de parsing JSON
                         Toast.makeText(getApplicationContext(), "Utilisateur inconnu, veuillez réessayer", Toast.LENGTH_SHORT).show();
                     });
                 }

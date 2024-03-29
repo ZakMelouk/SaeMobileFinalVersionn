@@ -1,6 +1,10 @@
 package iut.dam.saemobilefinale;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.List;
 
 public class Medicament {
     String CIS;
@@ -11,6 +15,14 @@ public class Medicament {
         Medicament obj = gson.fromJson(json, Medicament.class);
         return obj;
     }
+
+    public static List<Medicament> getListFromJson(String json){
+        Gson gson = new Gson();
+        Type type = new TypeToken<List<Medicament>>(){}.getType();
+        List<Medicament> list = gson.fromJson(json, type);
+        return list;
+    }
+
     public String getCIS(){
         return CIS;
     }
