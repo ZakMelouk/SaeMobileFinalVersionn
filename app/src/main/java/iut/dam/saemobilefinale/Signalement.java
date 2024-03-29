@@ -18,5 +18,6 @@ public class Signalement {
     public String getCIP(){
         return Code_CIP;
     }
+    public String getDate(){return Date;}
 
 }

@@ -11,4 +11,13 @@ public class Medicament {
         Medicament obj = gson.fromJson(json, Medicament.class);
         return obj;
     }
+    public String getCIS(){
+        return CIS;
+    }
+    public String getCIP_13(){
+        return CIP_13;
+    }
+    public String getNom(){
+        return nom;
+    }
 }

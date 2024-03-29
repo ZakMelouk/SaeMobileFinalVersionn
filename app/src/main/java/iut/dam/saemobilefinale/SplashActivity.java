@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 public class SplashActivity extends AppCompatActivity {
 
-    private static final int SPLASH_TIME_OUT = 2000; // Délai en millisecondes (ici, 2000 ms ou 2 secondes)
+    private static final int SPLASH_TIME_OUT = 3000; // Délai en millisecondes (ici, 2000 ms ou 2 secondes)
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

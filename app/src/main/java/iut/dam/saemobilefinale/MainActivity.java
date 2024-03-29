@@ -6,13 +6,20 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.journeyapps.barcodescanner.ScanContract;
@@ -53,6 +60,14 @@ public class MainActivity extends AppCompatActivity {
         MesSignalements = new HashMap<>();
         btn_signaler.setBackgroundColor(Color.parseColor("#FFFFFF"));
         btn_scan.setBackgroundColor(Color.parseColor("#FFFFFF"));
+        ImageView img_Back = findViewById(R.id.fleche);
+        img_Back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, MenuActivity.class));
+                finish();
+            }
+        });
 
         btn_scan.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,8 +96,10 @@ public class MainActivity extends AppCompatActivity {
                 }, 150); // Délai en millisecondes
                 String CIP = editTextCIP.getText().toString();
                 if(verifierCIP(CIP)){
-                    if(!(estSignale(CIP)))
+                    if(!(estSignale(CIP))){
+                        editTextCIP.setText("");
                         insererSignalement(CIP);
+                    }
                     else
                         Toast.makeText(getApplicationContext(), "Vous venez de signaler ce medicament.", Toast.LENGTH_SHORT).show();
                     // Restaurer la couleur d'origine du bouton après un certain délai (par exemple, 1 seconde)
@@ -165,6 +182,7 @@ public class MainActivity extends AppCompatActivity {
                         MesSignalements.put(s,m);
                         runOnUiThread(() -> {
                             Toast.makeText(getApplicationContext(), "Nouveau signalement inséré avec succès!", Toast.LENGTH_SHORT).show();
+                            afficherSignalement(s,m);
                         });
                     } else if (message.contains("Aucun medicament trouve avec ce CIP_13")) {
                         runOnUiThread(() -> {
@@ -198,4 +216,56 @@ public class MainActivity extends AppCompatActivity {
         }
         return false;
     }
+    private void afficherSignalement(Signalement signalement, Medicament medicament) {
+        TableLayout tableLayout = findViewById(R.id.tableLayoutSignalements); // TableLayout dans le layout XML
+
+        // Créer une nouvelle rangée pour le signalement
+        TableRow row = new TableRow(this);
+        row.setLayoutParams(new TableRow.LayoutParams(
+                TableRow.LayoutParams.MATCH_PARENT,
+                TableRow.LayoutParams.WRAP_CONTENT
+        ));
+
+        // Créer une cellule pour le code CIP
+        TextView textViewCIP = new TextView(this);
+        textViewCIP.setText(signalement.getCIP());
+        textViewCIP.setTextColor(Color.WHITE); // Changer la couleur du texte en blanc
+        textViewCIP.setLayoutParams(new TableRow.LayoutParams(
+                0,
+                TableRow.LayoutParams.WRAP_CONTENT,
+                1f
+        ));
+        textViewCIP.setPadding(0, 0, 0, 20);
+        row.addView(textViewCIP); // Ajouter la cellule à la rangée
+
+        // Créer une cellule pour le nom du médicament
+        TextView textViewNom = new TextView(this);
+        textViewNom.setText(medicament.getNom());
+        textViewNom.setGravity(Gravity.CENTER_VERTICAL); // Aligner le texte verticalement au centre
+        textViewNom.setTextColor(Color.WHITE); // Changer la couleur du texte en blanc
+        textViewNom.setLayoutParams(new TableRow.LayoutParams(
+                0,
+                TableRow.LayoutParams.WRAP_CONTENT,
+                1f
+        ));
+        textViewNom.setPadding(0, 0, 0, 20);
+        row.addView(textViewNom); // Ajouter la cellule à la rangée
+
+        // Créer une cellule pour la date du signalement
+        TextView textViewDate = new TextView(this);
+        textViewDate.setText(signalement.getDate());
+        textViewDate.setTextColor(Color.WHITE); // Changer la couleur du texte en blanc
+        textViewDate.setLayoutParams(new TableRow.LayoutParams(
+                0,
+                TableRow.LayoutParams.WRAP_CONTENT,
+                1f
+        ));
+        textViewDate.setPadding(0, 0, 0, 20);
+        row.addView(textViewDate); // Ajouter la cellule à la rangée
+
+        // Ajouter la rangée au TableLayout
+        tableLayout.addView(row);
+    }
+
+
 }
