@@ -28,6 +28,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Connexion Admin"
+        android:fontFamily="@font/police"
         android:layout_centerHorizontal="true"
         android:textColor="#ffffff"
         android:layout_marginTop="130dp"
@@ -72,6 +73,7 @@
         android:layout_marginTop="30dp"
         android:layout_below="@+id/TextPassword"
         android:id="@+id/buttonLogin"
+        android:fontFamily="@font/police"
         android:width="300dp"
         />
 

@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 public class SplashActivity extends AppCompatActivity {
 
-    private static final int SPLASH_TIME_OUT = 3000; // Délai en millisecondes (ici, 2000 ms ou 2 secondes)
+    private static final int SPLASH_TIME_OUT = 1500; // Délai en millisecondes (ici, 2000 ms ou 2 secondes)
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,9 +24,10 @@ public class SplashActivity extends AppCompatActivity {
         TextView textViewWelcome = findViewById(R.id.textViewWelcome);
 
         // Animation fade in pour l'image et le texte
-        Animation fadeInAnimation = AnimationUtils.loadAnimation(this, R.anim.fade_in);
-        imageViewLogo.startAnimation(fadeInAnimation);
-        textViewWelcome.startAnimation(fadeInAnimation);
+        Animation rotateInAnimation = AnimationUtils.loadAnimation(this, R.anim.logo_animation);
+        Animation textInAnimation = AnimationUtils.loadAnimation(this, R.anim.text_anim);
+        imageViewLogo.startAnimation(rotateInAnimation);
+        textViewWelcome.startAnimation(textInAnimation);
 
         // Utilisation d'un Handler pour passer à l'activité principale après un délai
         new Handler().postDelayed(new Runnable() {

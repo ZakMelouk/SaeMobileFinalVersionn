@@ -41,6 +41,7 @@
             android:layout_marginTop="110dp"
             android:textSize="28dp"
             app:layout_constraintBottom_toBottomOf="parent"
+            android:fontFamily="@font/police"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -66,6 +67,7 @@
             android:layout_marginTop="30dp"
             android:layout_below="@+id/editTextCIP"
             android:id="@+id/btn_Signaler"
+            android:fontFamily="@font/police"
             android:width="300dp"
             />
         <ImageView
@@ -76,6 +78,7 @@
             android:layout_below="@+id/btn_Signaler"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="70dp"/>
+
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -85,6 +88,7 @@
             android:layout_marginTop="200dp"
             android:layout_below="@+id/btn_Signaler"
             android:id="@+id/btn_Scan"
+            android:fontFamily="@font/police"
             android:width="200dp"
             />
 
@@ -97,7 +101,9 @@
             android:textColor="#ffffff"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="50dp"
+            android:fontFamily="@font/police"
             android:textSize="28dp" />
+
         <TableLayout
             android:id="@+id/tableLayoutSignalements"
             android:layout_width="match_parent"
@@ -116,39 +122,42 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Code CIP"
-                    android:textColor="#ffffff"
-                    android:textSize="20sp"
+                    android:background="#003d66"
                     android:ellipsize="end"
                     android:padding="10dp"
-                    android:background="#003d66"
-                    android:textAlignment="center" />
+                    android:text="Code CIP"
+                    android:textAlignment="center"
+                    android:fontFamily="@font/police"
+                    android:textColor="#ffffff"
+                    android:textSize="20sp" />
 
                 <!-- Colonne Nom -->
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Nom"
-                    android:textColor="#ffffff"
-                    android:textSize="20sp"
-                    android:padding="10dp"
-                    android:ellipsize="end"
                     android:background="#003d66"
-                    android:textAlignment="center" />
+                    android:ellipsize="end"
+                    android:padding="10dp"
+                    android:text="Nom"
+                    android:textAlignment="center"
+                    android:fontFamily="@font/police"
+                    android:textColor="#ffffff"
+                    android:textSize="20sp" />
 
                 <!-- Colonne Date -->
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Date"
-                    android:textColor="#ffffff"
-                    android:textSize="20sp"
-                    android:padding="10dp"
-                    android:ellipsize="end"
                     android:background="#003d66"
-                    android:textAlignment="center" />
+                    android:ellipsize="end"
+                    android:padding="10dp"
+                    android:text="Date"
+                    android:textAlignment="center"
+                    android:textColor="#ffffff"
+                    android:fontFamily="@font/police"
+                    android:textSize="20sp" />
             </TableRow>
 
             <!-- Les signalements seront ajoutés ici dynamiquement -->

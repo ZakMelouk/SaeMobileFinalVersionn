@@ -4,22 +4,47 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#007acc"
     tools:context=".MenuActivity">
+
+    <ImageView
+        android:id="@+id/imageLogo"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:src="@drawable/logo"
+        android:layout_marginBottom="10dp"
+        android:layout_centerHorizontal="true"
+        android:fontFamily="@font/police"
+        android:layout_marginTop="10dp"/>
+
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Se connecter en tant qu'admin"
+        android:text="Connexion Admin"
+        android:textColor="#007acc"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="250dp"
-        android:id="@+id/btn_Connecter"/>
+        android:layout_marginTop="70dp"
+        android:textSize="20dp"
+        android:layout_below="@+id/imageLogo"
+        android:id="@+id/btn_Connecter"
+        android:fontFamily="@font/police"
+        android:width="300dp"
+        />
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Signalez un medicament"
+        android:text="Signaler"
+        android:textColor="#007acc"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:textSize="20dp"
         android:layout_below="@+id/btn_Connecter"
-        android:layout_marginTop="50dp"
-        android:id="@+id/btn_Signaler"/>
+        android:id="@+id/btn_Signaler"
+        android:fontFamily="@font/police"
+        android:width="300dp"
+        />
+
 
 </RelativeLayout>
