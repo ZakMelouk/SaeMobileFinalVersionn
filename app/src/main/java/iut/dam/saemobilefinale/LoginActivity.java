@@ -99,7 +99,7 @@ public class LoginActivity extends AppCompatActivity {
                     runOnUiThread(() -> {
                         // Utiliser les données extraites comme nécessaire
                         Toast.makeText(getApplicationContext(), R.string.successful_login, Toast.LENGTH_SHORT).show();
-                            Intent newIntent = new Intent(LoginActivity.this, StatistiqueActivity.class);
+                            Intent newIntent = new Intent(LoginActivity.this, AdminActivity.class);
                             startActivity(newIntent);
                              finish();
                     });
