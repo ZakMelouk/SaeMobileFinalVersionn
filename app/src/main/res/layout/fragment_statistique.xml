@@ -10,8 +10,7 @@
         android:id="@+id/editTextRechercherMedicament"
         android:layout_width="170dp"
         android:layout_height="50dp"
-        android:layout_marginLeft="70dp"
-        android:layout_marginTop="45dp"
+        android:layout_marginLeft="35dp"
         android:background="@drawable/edittext_rounded_corners"
         android:hint="CIP_13 ou CIS"
         android:padding="20dp"
@@ -20,11 +19,10 @@
 
     <Button
         android:id="@+id/btn_Rechercher"
-        android:layout_width="130dp"
+        android:layout_width="150dp"
         android:layout_height="50dp"
         android:layout_marginLeft="20dp"
         android:layout_toRightOf="@+id/editTextRechercherMedicament"
-        android:layout_marginTop="45dp"
         android:width="300dp"
         android:text="Rechercher"
         android:textColor="#007acc" />
@@ -44,7 +42,7 @@
     <ScrollView
         android:id="@+id/scrollView1"
         android:layout_width="match_parent"
-        android:layout_height="280dp"
+        android:layout_height="267dp"
         android:layout_below="@id/TextViewSignalements"
         android:layout_marginTop="20dp">
 
@@ -106,19 +104,19 @@
         android:id="@+id/nb_Signalement"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:layout_marginStart="25dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp"
         android:text="Nombre de signalements\n       par médicament"
         android:textColor="#ffffff"
-        android:textSize="15sp"
+        android:textSize="10sp"
         android:layout_below="@id/scrollView1"/>
 
     <ScrollView
         android:id="@+id/scrollView2"
         android:layout_width="200dp"
-        android:layout_height="156dp"
+        android:layout_height="190dp"
         android:layout_below="@id/nb_Signalement"
-        android:layout_marginTop="20dp">
+        android:layout_marginTop="10dp">
 
         <TableLayout
             android:id="@+id/tableLayoutCompterSignalement"
@@ -183,23 +181,23 @@
         android:id="@+id/nb_ParPathologie"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
+        android:layout_marginStart="60dp"
         android:text="Nombre de signalements\n           par pathologie"
         android:textColor="#ffffff"
-        android:textSize="15sp"
-        android:layout_marginTop="30dp"
+        android:textSize="10sp"
+        android:layout_marginTop="20dp"
         android:layout_toRightOf="@+id/nb_Signalement"
         android:layout_below="@id/scrollView1"/>
 
     <TableLayout
         android:id="@+id/tableLayoutSignalementPathologie"
         android:layout_width="200dp"
-        android:layout_height="156dp"
+        android:layout_height="190dp"
         android:layout_toRightOf="@+id/scrollView2"
-        android:layout_marginLeft="20dp"
+        android:layout_marginLeft="17dp"
         android:layout_below="@+id/nb_ParPathologie"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:stretchColumns="*">
 
         <!-- En-tête de colonnes -->

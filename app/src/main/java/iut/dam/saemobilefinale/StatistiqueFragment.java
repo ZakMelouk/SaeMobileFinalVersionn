@@ -1,6 +1,7 @@
 package iut.dam.saemobilefinale;
 
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Gravity;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 
 import org.json.JSONObject;
@@ -124,7 +126,6 @@ public class StatistiqueFragment extends Fragment {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(getContext(), "c carre", Toast.LENGTH_SHORT).show();
                             afficherSignalement(rootView);
                             afficherNbSignalement(rootView);
                         }
@@ -171,7 +172,6 @@ public class StatistiqueFragment extends Fragment {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(getContext(), "c carre", Toast.LENGTH_SHORT).show();
                             afficherSignalementByPatologie(rootView);
                         }
                     });
@@ -213,6 +213,7 @@ public class StatistiqueFragment extends Fragment {
 
     private void afficherSignalement(View rootView, Signalement signalement, Medicament medicament) {
         TableLayout tableLayout = rootView.findViewById(R.id.tableLayoutSignalement2);
+        Typeface customTypeface = ResourcesCompat.getFont(getContext(), R.font.police);
 
         TableRow row = new TableRow(getContext());
         row.setLayoutParams(new TableRow.LayoutParams(
@@ -223,6 +224,8 @@ public class StatistiqueFragment extends Fragment {
         TextView textViewCIP = new TextView(getContext());
         textViewCIP.setText(medicament.getCIP_13());
         textViewCIP.setTextColor(Color.WHITE);
+        textViewCIP.setTypeface(customTypeface);
+
         textViewCIP.setLayoutParams(new TableRow.LayoutParams(
                 0,
                 TableRow.LayoutParams.WRAP_CONTENT,
@@ -235,6 +238,8 @@ public class StatistiqueFragment extends Fragment {
         textViewNom.setText(medicament.getNom());
         textViewNom.setGravity(Gravity.CENTER_VERTICAL);
         textViewNom.setTextColor(Color.WHITE);
+        textViewNom.setTypeface(customTypeface);
+
         textViewNom.setLayoutParams(new TableRow.LayoutParams(
                 0,
                 TableRow.LayoutParams.WRAP_CONTENT,
@@ -246,6 +251,8 @@ public class StatistiqueFragment extends Fragment {
         TextView textViewDate = new TextView(getContext());
         textViewDate.setText(signalement.getDate());
         textViewDate.setTextColor(Color.WHITE);
+        textViewDate.setTypeface(customTypeface);
+
         textViewDate.setLayoutParams(new TableRow.LayoutParams(
                 0,
                 TableRow.LayoutParams.WRAP_CONTENT,
@@ -283,6 +290,7 @@ public class StatistiqueFragment extends Fragment {
 
     public void afficherSignalement(View rootView, Medicament medicament, int nbSignalements) {
         TableLayout tableLayout = rootView.findViewById(R.id.tableLayoutCompterSignalement);
+        Typeface customTypeface = ResourcesCompat.getFont(getContext(), R.font.police);
 
         TableRow row = new TableRow(getContext());
         row.setLayoutParams(new TableRow.LayoutParams(
@@ -294,6 +302,8 @@ public class StatistiqueFragment extends Fragment {
         textViewCIP.setText(medicament.getCIP_13());
         textViewCIP.setGravity(Gravity.CENTER);
         textViewCIP.setTextColor(Color.WHITE);
+        textViewCIP.setTypeface(customTypeface);
+
         textViewCIP.setLayoutParams(new TableRow.LayoutParams(
                 0,
                 TableRow.LayoutParams.WRAP_CONTENT,
@@ -307,6 +317,8 @@ public class StatistiqueFragment extends Fragment {
         textViewNom.setGravity(Gravity.CENTER);
         textViewNom.setGravity(Gravity.CENTER);
         textViewNom.setTextColor(Color.WHITE);
+        textViewNom.setTypeface(customTypeface);
+
         textViewNom.setLayoutParams(new TableRow.LayoutParams(
                 0,
                 TableRow.LayoutParams.WRAP_CONTENT,
@@ -319,6 +331,8 @@ public class StatistiqueFragment extends Fragment {
         textViewNb.setText(String.valueOf(nbSignalements));
         textViewNb.setGravity(Gravity.CENTER);
         textViewNb.setTextColor(Color.WHITE);
+        textViewNb.setTypeface(customTypeface);
+
         textViewNb.setLayoutParams(new TableRow.LayoutParams(
                 0,
                 TableRow.LayoutParams.WRAP_CONTENT,
@@ -339,6 +353,7 @@ public class StatistiqueFragment extends Fragment {
 
     private void afficherSignalementByPatologie(View rootView, Pathologie pathologie) {
         TableLayout tableLayout = rootView.findViewById(R.id.tableLayoutSignalementPathologie);
+        Typeface customTypeface = ResourcesCompat.getFont(getContext(), R.font.police);
 
         TableRow row = new TableRow(getContext());
         row.setLayoutParams(new TableRow.LayoutParams(
@@ -349,6 +364,8 @@ public class StatistiqueFragment extends Fragment {
         TextView textViewPathologie = new TextView(getContext());
         textViewPathologie.setText(pathologie.getPathologie());
         textViewPathologie.setTextColor(Color.WHITE);
+        textViewPathologie.setTypeface(customTypeface);
+
         textViewPathologie.setLayoutParams(new TableRow.LayoutParams(
                 0,
                 TableRow.LayoutParams.WRAP_CONTENT,
@@ -364,6 +381,8 @@ public class StatistiqueFragment extends Fragment {
         textViewNbSignalements.setText(String.valueOf(pathologie.getNb_signalements()));
         textViewNbSignalements.setGravity(Gravity.CENTER);
         textViewNbSignalements.setTextColor(Color.WHITE);
+        textViewNbSignalements.setTypeface(customTypeface);
+
         textViewNbSignalements.setLayoutParams(new TableRow.LayoutParams(
                 0,
                 TableRow.LayoutParams.WRAP_CONTENT,
@@ -373,7 +392,6 @@ public class StatistiqueFragment extends Fragment {
         textViewNbSignalements.setTextSize(8);
         textViewNbSignalements.setBackgroundColor(Color.parseColor("#003d66"));
         row.addView(textViewNbSignalements);
-
         tableLayout.addView(row);
     }
 }

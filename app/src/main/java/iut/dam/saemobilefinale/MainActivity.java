@@ -4,10 +4,12 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
 
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -113,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void scan_code(){
+    private void scan_code() {
         ScanOptions options = new ScanOptions();
         options.setPrompt("Volumn up to flash on");
         options.setBeepEnabled(true);
@@ -122,20 +124,22 @@ public class MainActivity extends AppCompatActivity {
         barLauncher.launch(options);
     }
 
-    ActivityResultLauncher<ScanOptions> barLauncher = registerForActivityResult(new ScanContract(), result ->{
+    ActivityResultLauncher<ScanOptions> barLauncher = registerForActivityResult(new ScanContract(), result -> {
+        if (result.getContents() != null) {
+            // Si le contenu du résultat n'est pas null, afficher le contenu dans une boîte de dialogue
+            if(!(estSignale(result.getContents().substring(4, 17)))) {
+                insererSignalement(result.getContents().substring(4, 17));
+            }
+            else{
+                Toast.makeText(getApplicationContext(), "Vous venez de signaler ce medicament.", Toast.LENGTH_SHORT).show();
+            }
 
-        if(result.getContents()==null){
-            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-            builder.setTitle("Result");
-            builder.setMessage(result.getContents());
-            builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-
-                }
-            }).show();
+        } else {
+            // Si le contenu du résultat est null, afficher un message d'erreur
+            Toast.makeText(MainActivity.this, "Aucun code-barres scanné", Toast.LENGTH_SHORT).show();
         }
     });
+
 
     public boolean verifierCIP(String cip) {
         // Vérifier la longueur
@@ -218,6 +222,7 @@ public class MainActivity extends AppCompatActivity {
     }
     private void afficherSignalement(Signalement signalement, Medicament medicament) {
         TableLayout tableLayout = findViewById(R.id.tableLayoutSignalements); // TableLayout dans le layout XML
+        Typeface customTypeface = ResourcesCompat.getFont(this, R.font.police);
 
         // Créer une nouvelle rangée pour le signalement
         TableRow row = new TableRow(this);
@@ -229,6 +234,8 @@ public class MainActivity extends AppCompatActivity {
         // Créer une cellule pour le code CIP
         TextView textViewCIP = new TextView(this);
         textViewCIP.setText(signalement.getCIP());
+        textViewCIP.setTypeface(customTypeface);
+
         textViewCIP.setTextColor(Color.WHITE); // Changer la couleur du texte en blanc
         textViewCIP.setLayoutParams(new TableRow.LayoutParams(
                 0,
@@ -241,6 +248,8 @@ public class MainActivity extends AppCompatActivity {
         // Créer une cellule pour le nom du médicament
         TextView textViewNom = new TextView(this);
         textViewNom.setText(medicament.getNom());
+        textViewNom.setTypeface(customTypeface);
+
         textViewNom.setGravity(Gravity.CENTER_VERTICAL); // Aligner le texte verticalement au centre
         textViewNom.setTextColor(Color.WHITE); // Changer la couleur du texte en blanc
         textViewNom.setLayoutParams(new TableRow.LayoutParams(
@@ -254,6 +263,8 @@ public class MainActivity extends AppCompatActivity {
         // Créer une cellule pour la date du signalement
         TextView textViewDate = new TextView(this);
         textViewDate.setText(signalement.getDate());
+        textViewDate.setTypeface(customTypeface);
+
         textViewDate.setTextColor(Color.WHITE); // Changer la couleur du texte en blanc
         textViewDate.setLayoutParams(new TableRow.LayoutParams(
                 0,
