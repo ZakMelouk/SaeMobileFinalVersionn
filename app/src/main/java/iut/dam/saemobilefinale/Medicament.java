@@ -15,6 +15,10 @@ public class Medicament {
         Medicament obj = gson.fromJson(json, Medicament.class);
         return obj;
     }
+    public Medicament(String CIP_13, String nom){
+        this.CIP_13 = CIP_13;
+        this.nom = nom;
+    }
 
     public static List<Medicament> getListFromJson(String json){
         Gson gson = new Gson();

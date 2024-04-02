@@ -1,4 +1,8 @@
 package iut.dam.saemobilefinale;
+import java.io.InputStream;
+import java.io.OutputStreamWriter;
+
+import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
@@ -30,6 +34,8 @@ import com.journeyapps.barcodescanner.ScanOptions;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -45,7 +51,15 @@ import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 public class MainActivity extends AppCompatActivity {
 
     Button btn_scan;
@@ -60,6 +74,8 @@ public class MainActivity extends AppCompatActivity {
         btn_signaler = findViewById(R.id.btn_Signaler);
         EditText editTextCIP = findViewById(R.id.editTextCIP);
         MesSignalements = new HashMap<>();
+        readAndProcessSignalements();
+        readAndProcessSignalementsHorsCo();
         btn_signaler.setBackgroundColor(Color.parseColor("#FFFFFF"));
         btn_scan.setBackgroundColor(Color.parseColor("#FFFFFF"));
         ImageView img_Back = findViewById(R.id.fleche);
@@ -100,7 +116,13 @@ public class MainActivity extends AppCompatActivity {
                 if(verifierCIP(CIP)){
                     if(!(estSignale(CIP))){
                         editTextCIP.setText("");
-                        insererSignalement(CIP);
+                        Calendar currentCalendar = Calendar.getInstance();
+                        Date currentDate = currentCalendar.getTime();
+                        currentCalendar.add(Calendar.HOUR_OF_DAY, 2);
+                        Date newDate = currentCalendar.getTime();
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+                        String formattedNewDate = dateFormat.format(newDate);
+                        insererSignalement(CIP,formattedNewDate);
                     }
                     else
                         Toast.makeText(getApplicationContext(), "Vous venez de signaler ce medicament.", Toast.LENGTH_SHORT).show();
@@ -128,7 +150,13 @@ public class MainActivity extends AppCompatActivity {
         if (result.getContents() != null) {
             // Si le contenu du résultat n'est pas null, afficher le contenu dans une boîte de dialogue
             if(!(estSignale(result.getContents().substring(4, 17)))) {
-                insererSignalement(result.getContents().substring(4, 17));
+                Calendar currentCalendar = Calendar.getInstance();
+                Date currentDate = currentCalendar.getTime();
+                currentCalendar.add(Calendar.HOUR_OF_DAY, 2);
+                Date newDate = currentCalendar.getTime();
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+                String formattedNewDate = dateFormat.format(newDate);
+                insererSignalement(result.getContents().substring(4, 17),formattedNewDate);
             }
             else{
                 Toast.makeText(getApplicationContext(), "Vous venez de signaler ce medicament.", Toast.LENGTH_SHORT).show();
@@ -156,15 +184,7 @@ public class MainActivity extends AppCompatActivity {
 
         return true;
     }
-    public void insererSignalement(String CIP){
-        Calendar currentCalendar = Calendar.getInstance();
-        Date currentDate = currentCalendar.getTime();
-
-        // Ajouter une heure à la date actuelle
-        currentCalendar.add(Calendar.HOUR_OF_DAY, 1);
-        Date newDate = currentCalendar.getTime();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-        String formattedNewDate = dateFormat.format(newDate);
+    public void insererSignalement(String CIP,String formattedNewDate){
         String urlString = "http://192.168.1.13/Pharmacie/insertSignalement.php?cip_13=" + CIP + "&current_date=" + formattedNewDate ;
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
@@ -187,6 +207,7 @@ public class MainActivity extends AppCompatActivity {
                         runOnUiThread(() -> {
                             Toast.makeText(getApplicationContext(), "Nouveau signalement inséré avec succès!", Toast.LENGTH_SHORT).show();
                             afficherSignalement(s,m);
+                            writeSignalementToFile(s,m);
                         });
                     } else if (message.contains("Aucun medicament trouve avec ce CIP_13")) {
                         runOnUiThread(() -> {
@@ -206,10 +227,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                runOnUiThread(() -> {
-                    Log.d("Erreur de connexion", "Erreur lors de la connexion au serveur : " + e.getMessage());
-                    Toast.makeText(getApplicationContext(), "ERREUR", Toast.LENGTH_SHORT).show();
-                });
+                searchCipAndGetName(CIP);
             }
         });
     }
@@ -278,5 +296,263 @@ public class MainActivity extends AppCompatActivity {
         tableLayout.addView(row);
     }
 
+    private void searchCipAndGetName(String cipToFind) {
 
+        String jsonString = readJsonFromFile(); // Lire le fichier JSON
+        if (jsonString != null) {
+            try {
+                JSONArray jsonArray = new JSONArray(jsonString); // Parser le JSON en tableau
+
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonObject = jsonArray.getJSONObject(i); // Obtenir l'objet JSON à chaque index
+
+                    String cip = jsonObject.getString("CIP");
+                    if (cip.substring(0,13).equals(cipToFind)) {// Vérifier si le code CIP correspond
+                        String nom = jsonObject.getString("Nom");
+                        Calendar currentCalendar = Calendar.getInstance();
+                        Date currentDate = currentCalendar.getTime();
+                        currentCalendar.add(Calendar.HOUR_OF_DAY, 1);
+                        Date newDate = currentCalendar.getTime();
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+                        String formattedNewDate = dateFormat.format(newDate);
+                        Medicament m = new Medicament(cipToFind,nom);
+                        Signalement s = new Signalement(cipToFind,formattedNewDate);
+                        MesSignalements.put(s,m);
+                        writeSignalementToFileHorsCo(s,m);
+                        writeSignalementToFile(s,m);
+                        runOnUiThread(() -> {
+                            Toast.makeText(getApplicationContext(), "Nouveau signalement hors connexion inséré avec succès!", Toast.LENGTH_SHORT).show();
+                            afficherSignalement(s,m);
+                        });// Obtenir la valeur du champ "Nom"
+                        Log.d(TAG, "CIP trouvé: " + cip + " - Nom: " + nom); // Afficher le résultat
+                        break; // Arrêter la boucle si le code CIP est trouvé
+                    }
+                }
+            } catch (JSONException e) {
+                Log.e(TAG, "Erreur lors du parsing du JSON: " + e.getMessage());
+            }
+        } else {
+            Log.e(TAG, "Impossible de lire le fichier JSON");
+        }
+    }
+
+    private String readJsonFromFile() {
+        try {
+            InputStream is = getResources().openRawResource(R.raw.cip_nom);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                sb.append(line);
+            }
+            reader.close();
+            is.close();
+            return sb.toString();
+        } catch (IOException e) {
+            Log.e(TAG, "Erreur lors de la lecture du fichier: " + e.getMessage());
+            return null;
+        }
+    }
+
+    private void writeSignalementToFileHorsCo(Signalement signalement, Medicament medicament) {
+        String fileName = "signalements_hors_connexion.json";
+        JSONArray jsonArray = new JSONArray();
+
+        // Lire le contenu existant du fichier
+        String existingContent = readJsonFromFile(fileName);
+        if (existingContent != null && !existingContent.isEmpty()) {
+            try {
+                jsonArray = new JSONArray(existingContent);
+            } catch (JSONException e) {
+                Log.e(TAG, "Erreur lors de la conversion du contenu existant en JSONArray: " + e.getMessage());
+            }
+        }
+
+        // Créer le nouvel objet JSON à ajouter
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("CIP", signalement.getCIP());
+            jsonObject.put("Date", signalement.getDate());
+            jsonObject.put("Nom", medicament.getNom());
+        } catch (JSONException e) {
+            Log.e(TAG, "Erreur lors de la création du nouvel objet JSON: " + e.getMessage());
+            return;
+        }
+
+        // Ajouter le nouvel objet au JSONArray existant
+        jsonArray.put(jsonObject);
+
+        // Réécrire le fichier avec le nouveau contenu complet
+        try (FileOutputStream fos = openFileOutput(fileName, MODE_PRIVATE);
+             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(fos, StandardCharsets.UTF_8))) {
+            writer.write(jsonArray.toString());
+            Log.d(TAG, "Signalement ajouté avec succès dans le fichier: " + fileName);
+        } catch (IOException e) {
+            Log.e(TAG, "Erreur lors de l'écriture du fichier: " + e.getMessage());
+        }
+    }
+    private void writeSignalementToFile(Signalement signalement, Medicament medicament) {
+        String fileName = "signalements.json";
+        JSONArray jsonArray = new JSONArray();
+
+        // Lire le contenu existant du fichier
+        String existingContent = readJsonFromFile(fileName);
+        if (existingContent != null && !existingContent.isEmpty()) {
+            try {
+                jsonArray = new JSONArray(existingContent);
+            } catch (JSONException e) {
+                Log.e(TAG, "Erreur lors de la conversion du contenu existant en JSONArray: " + e.getMessage());
+            }
+        }
+
+        // Créer le nouvel objet JSON à ajouter
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("CIP", signalement.getCIP());
+            jsonObject.put("Date", signalement.getDate());
+            jsonObject.put("Nom", medicament.getNom());
+        } catch (JSONException e) {
+            Log.e(TAG, "Erreur lors de la création du nouvel objet JSON: " + e.getMessage());
+            return;
+        }
+
+        // Ajouter le nouvel objet au JSONArray existant
+        jsonArray.put(jsonObject);
+
+        // Réécrire le fichier avec le nouveau contenu complet
+        try (FileOutputStream fos = openFileOutput(fileName, MODE_PRIVATE);
+             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(fos, StandardCharsets.UTF_8))) {
+            writer.write(jsonArray.toString());
+            Log.d(TAG, "Signalement ajouté avec succès dans le fichier: " + fileName);
+        } catch (IOException e) {
+            Log.e(TAG, "Erreur lors de l'écriture du fichier: " + e.getMessage());
+        }
+    }
+
+    private String readJsonFromFile(String fileName) {
+        StringBuilder content = new StringBuilder();
+        try (FileInputStream fis = openFileInput(fileName);
+             BufferedReader reader = new BufferedReader(new InputStreamReader(fis, StandardCharsets.UTF_8))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                content.append(line);
+            }
+        } catch (IOException e) {
+            Log.e(TAG, "Erreur lors de la lecture du fichier: " + e.getMessage());
+            // Si le fichier n'existe pas, retourner null pour créer un nouveau JSONArray
+            return null;
+        }
+        return content.toString();
+    }
+    private void readAndProcessSignalementsHorsCo() {
+        String fileName = "signalements_hors_connexion.json";
+        try {
+            // Lire le contenu du fichier JSON
+            String jsonString = readJsonFromFile(fileName);
+            if (jsonString != null && !jsonString.isEmpty()) {
+                JSONArray jsonArray = new JSONArray(jsonString);
+
+                // Itérer à travers chaque objet du tableau JSON
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    String codeCIP = jsonObject.getString("CIP");
+                    String date = jsonObject.getString("Date");
+                    insererSignalementHorsCo(codeCIP,date);
+                }
+            }
+        } catch (JSONException e) {
+            Log.e(TAG, "Erreur lors du parsing du JSON: " + e.getMessage());
+        }
+    }
+    private void readAndProcessSignalements() {
+        String fileName = "signalements.json";
+        try {
+            // Lire le contenu du fichier JSON
+            String jsonString = readJsonFromFile(fileName);
+            if (jsonString != null && !jsonString.isEmpty()) {
+                JSONArray jsonArray = new JSONArray(jsonString);
+
+                // Itérer à travers chaque objet du tableau JSON
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    String codeCIP = jsonObject.getString("CIP");
+                    String date = jsonObject.getString("Date");
+                    String nom = jsonObject.getString("Nom");
+                    Medicament m = new Medicament(codeCIP,nom);
+                    Signalement s = new Signalement(codeCIP,date);
+                    MesSignalements.put(s,m);
+                    afficherSignalement(s,m);
+                }
+            }
+        } catch (JSONException e) {
+            Log.e(TAG, "Erreur lors du parsing du JSON: " + e.getMessage());
+        }
+    }
+    public void insererSignalementHorsCo(String CIP,String formattedNewDate){
+        String urlString = "http://192.168.1.13/Pharmacie/insertSignalement.php?cip_13=" + CIP + "&current_date=" + formattedNewDate ;
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(urlString)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                String responseData = response.body().string();
+                try {
+                    JSONObject jsonResponse = new JSONObject(responseData);
+                    String message = jsonResponse.getString("message");
+
+                    if (message.contains("Nouveau signalement insere avec succes")) {
+                        removeSignalementFromFile(CIP,formattedNewDate);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+            }
+        });
+    }
+    private void removeSignalementFromFile(String cipToRemove, String dateToRemove) {
+        String fileName = "signalements_hors_connexion.json";
+        try {
+            // Lire le contenu existant du fichier
+            String jsonString = readJsonFromFile(fileName);
+            if (jsonString != null && !jsonString.isEmpty()) {
+                JSONArray jsonArray = new JSONArray(jsonString);
+                JSONArray newArray = new JSONArray();
+
+                // Itérer à travers le JSONArray pour trouver l'objet à supprimer
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    String codeCIP = jsonObject.getString("CIP");
+                    String date = jsonObject.getString("Date");
+
+                    // Si l'objet courant ne correspond pas aux critères, l'ajouter au nouveau JSONArray
+                    if (!codeCIP.equals(cipToRemove) || !date.equals(dateToRemove)) {
+                        newArray.put(jsonObject);
+                    }
+                }
+
+                // Réécrire le fichier avec le nouveau JSONArray
+                writeJsonToFile(fileName, newArray);
+            }
+        } catch (JSONException e) {
+            Log.e(TAG, "Erreur lors du parsing du JSON: " + e.getMessage());
+        }
+    }
+
+    private void writeJsonToFile(String fileName, JSONArray jsonArray) {
+        try (FileOutputStream fos = openFileOutput(fileName, MODE_PRIVATE);
+             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(fos, StandardCharsets.UTF_8))) {
+            writer.write(jsonArray.toString());
+        } catch (IOException e) {
+            Log.e(TAG, "Erreur lors de l'écriture dans le fichier: " + e.getMessage());
+        }
+    }
 }
